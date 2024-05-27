@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-resto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-resto
+  template:
+    metadata:
+      labels:
+        app: micro-resto
+    spec:
+      containers:
+        - name: micro-resto
+          image: fatnassihnifinassim353/restaurant:0.0.1
+          ports:
+            - containerPort: 9060
+              name: micro-news
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: resto-service
+spec:
+  selector:
+    app: micro-resto
+  ports:
+    - protocol: TCP
+      port: 9060
+      targetPort: 9060
+  type: ClusterIP 

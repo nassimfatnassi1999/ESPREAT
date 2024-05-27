@@ -1,0 +1,29 @@
+# Utilisation de variables d'environnement pour configurer Eureka
+eureka:
+  instance:
+    hostname: "${HOSTNAME}.eureka"
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+server:
+  port: 8099
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+
+#utiliser on localhost
+# eureka:
+#   instance:
+#     hostname: ${EUREKA_HOSTNAME}
+#   client:
+#     register-with-eureka: false
+#     fetch-registry: false
+#     service-url:
+#       defaultZone: http://${eureka.instance.hostname}:${SERVER_PORT}/eureka/
+# server:
+#   port: ${SERVER_PORT}
+# spring:
+#   config:
+#     import: optional:configserver:${CONFIG_SERVER_URL}

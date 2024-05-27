@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-feedback
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-feedback
+  template:
+    metadata:
+      labels:
+        app: micro-feedback
+    spec:
+      containers:
+        - name: micro-feedback
+          image: fatnassihnifinassim353/feedback:0.0.2
+          ports:
+            - containerPort: 9020
+              name: micro-feedback
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedback-service
+spec:
+  selector:
+    app: micro-feedback
+  ports:
+    - protocol: TCP
+      port: 9020
+      targetPort: 9020
+  type: ClusterIP 

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-service-azure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-service-azure
+  template:
+    metadata:
+      labels:
+        app: news-service-azure
+    spec:
+      containers:
+        - name: news-service-azure
+          image: fatnassihnifinassim353/news-service-azure:0.0.1
+          ports:
+            - containerPort: 9040
+              name: service-news
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-service-azure
+spec:
+  selector:
+    app: news-service-azure
+  ports:
+    - protocol: TCP
+      port: 9040
+      targetPort: 9040
+  type: NodePort  # Modifier le type de service en NodePort

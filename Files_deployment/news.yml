@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-news
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-news
+  template:
+    metadata:
+      labels:
+        app: micro-news
+    spec:
+      containers:
+        - name: micro-news
+          image: fatnassihnifinassim353/news:0.0.27
+          ports:
+            - containerPort: 9040
+              name: micro-news
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-service
+spec:
+  selector:
+    app: micro-news
+  ports:
+    - protocol: TCP
+      port: 9040
+      targetPort: 9040
+  type: NodePort  # Modifier le type de service en NodePort

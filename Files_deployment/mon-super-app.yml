@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mon-super-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mon-super-app
+  template:
+    metadata:
+      labels:
+        app: mon-super-app
+    spec:
+      containers:
+        - name: frontend
+          image: fatnassihnifinassim353/restaurant-app:1.0.1
+          ports:
+            - containerPort: 80
+        - name: eureka
+          image: fatnassihnifinassim353/eurekaimage:0.0.2
+          ports:
+            - containerPort: 8099
+        - name: api-gateway
+          image: fatnassihnifinassim353/gateway:0.0.4
+          ports:
+            - containerPort: 9090
+        - name: micro-user
+          image: fatnassihnifinassim353/user:0.0.3
+          ports:
+            - containerPort: 9070
+        - name: micro-news
+          image: fatnassihnifinassim353/news:0.0.27
+          ports:
+            - containerPort: 9040
+        - name: mysql-user
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+        - name: mysql-news
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3307

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mon-super-service
+spec:
+  selector:
+    app: mon-super-app
+  ports:
+    - name: port-front
+      protocol: TCP
+      port: 80
+      targetPort: 80
+    - name: port-eureka
+      protocol: TCP
+      port: 8099
+      targetPort: 8099
+    - name: port-gateway
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+    - name: port-user
+      protocol: TCP
+      port: 9070
+      targetPort: 9070
+    - name: port-news
+      protocol: TCP
+      port: 9040
+      targetPort: 9040
+    - name: port-mysql-user
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+    - name: port-mysql-news
+      protocol: TCP
+      port: 3307
+      targetPort: 3307

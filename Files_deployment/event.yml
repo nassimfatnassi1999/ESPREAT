@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-event
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-event
+  template:
+    metadata:
+      labels:
+        app: micro-event
+    spec:
+      containers:
+        - name: micro-event
+          image: fatnassihnifinassim353/event:0.0.1
+          ports:
+            - containerPort: 9010
+              name: micro-event
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-service
+spec:
+  selector:
+    app: micro-event
+  ports:
+    - protocol: TCP
+      port: 9010
+      targetPort: 9010
+  type: ClusterIP 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-forum
+  template:
+    metadata:
+      labels:
+        app: micro-forum
+    spec:
+      containers:
+        - name: micro-forum
+          image: fatnassihnifinassim353/forum:0.0.2
+          ports:
+            - containerPort: 9030
+              name: micro-forum
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forum-service
+spec:
+  selector:
+    app: micro-forum
+  ports:
+    - protocol: TCP
+      port: 9030
+      targetPort: 9030
+  type: ClusterIP 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-allergy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-allergy
+  template:
+    metadata:
+      labels:
+        app: micro-allergy
+    spec:
+      containers:
+        - name: micro-allergy
+          image: fatnassihnifinassim353/allergy:0.0.2
+          ports:
+            - containerPort: 9030
+              name: micro-allergy
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: allergy-service
+spec:
+  selector:
+    app: micro-allergy
+  ports:
+    - protocol: TCP
+      port: 9030
+      targetPort: 9030
+  type: ClusterIP 

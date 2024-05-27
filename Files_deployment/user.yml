@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-user
+  template:
+    metadata:
+      labels:
+        app: micro-user
+    spec:
+      containers:
+        - name: micro-user
+          image: fatnassihnifinassim353/user:0.0.3
+          ports:
+            - containerPort: 9070
+              name: micro-user
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: micro-user
+  ports:
+    - protocol: TCP
+      port: 9070
+      targetPort: 9070
+  type: NodePort
