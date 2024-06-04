@@ -15,10 +15,30 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: fatnassihnifinassim353/espreat:1.0.0
+          # image: fatnassihnifinassim353/espreat:1.0.0
+          image: fatnassihnifinassim353/front-azure:0.0.1
           ports:
             - containerPort: 80
               name: frontend
+
+        - name: eureka
+          image: fatnassihnifinassim353/eurekaimage:0.0.2
+          ports:
+            - containerPort: 8099
+              name: eureka
+        - name: api-gateway
+          image: fatnassihnifinassim353/gateway:0.0.4
+          ports:
+            - containerPort: 9090
+              name: api-gateway
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
 ---
 apiVersion: v1
 kind: Service
