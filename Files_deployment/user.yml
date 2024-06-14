@@ -38,4 +38,4 @@ spec:
     - protocol: TCP
       port: 9070
       targetPort: 9070
-  type: NodePort
+  type: ClusterIP

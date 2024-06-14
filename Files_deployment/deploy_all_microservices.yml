@@ -1,0 +1,317 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-eureka-gateway-public
+   
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-eureka-gateway-public
+  template:
+    metadata:
+      labels:
+        app: frontend-eureka-gateway-public
+    spec:
+      containers:
+        - name: frontend
+          image: fatnassihnifinassim353/espreat:1.0.2
+          ports:
+            - containerPort: 80
+              name: frontend
+
+        - name: eureka
+          image: fatnassihnifinassim353/eurekaimage:0.0.2
+          ports:
+            - containerPort: 8099
+              name: eureka
+        - name: api-gateway
+          image: fatnassihnifinassim353/gateway:0.0.4
+          ports:
+            - containerPort: 9090
+              name: api-gateway
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-eureka-gateway-service
+spec:
+  selector:
+    app: frontend-eureka-gateway-public
+  ports:
+    - protocol: TCP
+      port: 8099
+      targetPort: 8099
+      name: eureka
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+      name: gateway
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: front
+  type: LoadBalancer
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-event
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-event
+  template:
+    metadata:
+      labels:
+        app: micro-event
+    spec:
+      containers:
+        - name: micro-event
+          image: fatnassihnifinassim353/event:0.0.1
+          ports:
+            - containerPort: 9010
+              name: micro-event
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-service
+spec:
+  selector:
+    app: micro-event
+  ports:
+    - protocol: TCP
+      port: 9010
+      targetPort: 9010
+  type: ClusterIP 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-forum
+  template:
+    metadata:
+      labels:
+        app: micro-forum
+    spec:
+      containers:
+        - name: micro-forum
+          image: fatnassihnifinassim353/forum:0.0.2
+          ports:
+            - containerPort: 9030
+              name: micro-forum
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forum-service
+spec:
+  selector:
+    app: micro-forum
+  ports:
+    - protocol: TCP
+      port: 9030
+      targetPort: 9030
+  type: ClusterIP 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-allergy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-allergy
+  template:
+    metadata:
+      labels:
+        app: micro-allergy
+    spec:
+      containers:
+        - name: micro-allergy
+          image: fatnassihnifinassim353/allergy:0.0.2
+          ports:
+            - containerPort: 9030
+              name: micro-allergy
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: allergy-service
+spec:
+  selector:
+    app: micro-allergy
+  ports:
+    - protocol: TCP
+      port: 9030
+      targetPort: 9030
+  type: ClusterIP 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-user
+  template:
+    metadata:
+      labels:
+        app: micro-user
+    spec:
+      containers:
+        - name: micro-user
+          image: fatnassihnifinassim353/user:0.0.3
+          ports:
+            - containerPort: 9070
+              name: micro-user
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: micro-user
+  ports:
+    - protocol: TCP
+      port: 9070
+      targetPort: 9070
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-news
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-news
+  template:
+    metadata:
+      labels:
+        app: micro-news
+    spec:
+      containers:
+        - name: micro-news
+          image: fatnassihnifinassim353/news:0.0.27
+          ports:
+            - containerPort: 9040
+              name: micro-news
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-service
+spec:
+  selector:
+    app: micro-news
+  ports:
+    - protocol: TCP
+      port: 9040
+      targetPort: 9040
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micro-resto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micro-resto
+  template:
+    metadata:
+      labels:
+        app: micro-resto
+    spec:
+      containers:
+        - name: micro-resto
+          image: fatnassihnifinassim353/restaurant:0.0.1
+          ports:
+            - containerPort: 9060
+              name: micro-resto
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+          ports:
+            - containerPort: 3306
+              name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-service
+spec:
+  selector:
+    app: micro-resto
+  ports:
+    - protocol: TCP
+      port: 9060
+      targetPort: 9060
+  type: ClusterIP 
+
